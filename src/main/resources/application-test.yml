@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    - url=${H2_URL}
+    - username=${H2_USERNAME}
+    - password=${H2_PASSWORD}
+    - driver-class-name=${H2_DRIVER}
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+server:
+  port: 8083

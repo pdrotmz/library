@@ -1,0 +1,64 @@
+version: "3.8"
+
+services:
+  library:
+    build: .
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_PROFILES_ACTIVE: test
+    depends_on:
+      - redis
+      - h2
+    profiles:
+      - test
+
+  oracle:
+    image: gvenzl/oracle-xe:21-slim
+    container_name: oracle-xe-library
+    profiles:
+      - dev
+    ports:
+      - "1521:1521"
+      - "8080:8080"
+    environment:
+      - ORACLE_PASSWORD=${ORACLE_PASSWORD}
+      - APP_USER=${ORACLE_DEV_USER}
+      - APP_USER_PASSWORD=${ORACLE_DEV_PASSWORD}
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+
+  redis:
+    image: redis:7
+    container_name: redis-library
+    profiles:
+      - dev
+      - prod
+      - test
+    ports:
+      - "6379:6379"
+
+
+  h2:
+    image: oscarfonts/h2
+    container_name: h2-library
+    ports:
+      - "9092:9092"  # Porta TCP do H2
+      - "8082:8082"  # Porta do Console Web do H2
+    environment:
+      H2_OPTIONS: >-
+        -web
+        -webAllowOthers
+        -webPort 8082
+        -tcp
+        -tcpAllowOthers
+        -tcpPort 9092
+        -ifNotExists
+    volumes:
+      - h2-data:/opt/h2-data
+    profiles:
+      - test
+
+volumes:
+  oracle-data:
+  h2-data:

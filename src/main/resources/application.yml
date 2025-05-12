@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: library
+
+  profiles:
+    active: test
+
+  flyway:
+    baseline-on-migrate: true
+    enabled: true

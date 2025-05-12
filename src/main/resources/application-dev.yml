@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: ${ORACLE_DEV_URL}
+    username: ${ORACLE_DEV_USER}
+    password: ${MYSQL_DEV_PASSWORD}
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.Oracle21cDialect
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+server:
+  port: 8090
