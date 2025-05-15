@@ -6,7 +6,11 @@ services:
     ports:
       - "8083:8083"
     environment:
-      SPRING_PROFILES_ACTIVE: test
+      - SPRING_DATASOURCE_URL=${H2_URL}
+      - SPRING_DATASOURCE_USERNAME=${H2_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${H2_PASSWORD}
+      - SPRING_DATASOURCE_DRIVER-CLASS-NAME=${H2_DRIVER}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
     depends_on:
       - redis
       - h2
@@ -43,8 +47,8 @@ services:
     image: oscarfonts/h2
     container_name: h2-library
     ports:
-      - "9092:9092"  # Porta TCP do H2
-      - "8082:8082"  # Porta do Console Web do H2
+      - "9092:9092"  # TCP port
+      - "8082:8082"  # Web console port
     environment:
       H2_OPTIONS: >-
         -web
