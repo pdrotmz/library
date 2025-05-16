@@ -27,6 +27,10 @@ public class Book {
     @Column(name = "quantity", nullable = false)
     private int quantity;
 
-    @Column(name = "isbn", nullable = false, length = 20)
+    @Column(name = "isbn", nullable = false, length = 20, unique = true)
     private String isbn;
+
+    @Column(name = "category", nullable = false, length = 50, updatable = true)
+    @Enumerated(EnumType.STRING)
+    private Category category;
 }
