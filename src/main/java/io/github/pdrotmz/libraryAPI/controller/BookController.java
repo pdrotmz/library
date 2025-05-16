@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -24,6 +26,12 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newBook);
     }
 
+    @GetMapping("/list-all/home") // TODO: Changes this endpoints for "/home"
+    public ResponseEntity<List<BookSummaryProjection>> findAllSumaries() {
+        List<BookSummaryProjection> allBooks = bookService.findAllSummaries();
+        return ResponseEntity.status(HttpStatus.OK).body(allBooks);
+    }
+
     @GetMapping("/search-by/id/{id}")
     public ResponseEntity<BookSummaryProjection> findBookById(@PathVariable UUID id) {
         BookSummaryProjection bookId = bookService.findBookById(id);
@@ -34,6 +42,14 @@ public class BookController {
     public ResponseEntity<BookTitleOnly> findBookByTitle(@PathVariable String title) {
         BookTitleOnly bookTitle = bookService.findBookByTitle(title);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(bookTitle);
+    }
+
+    @GetMapping("/filter-by/price-between")
+    public ResponseEntity<List<BookSummaryProjection>> findByBookPriceBetween(
+            @RequestParam BigDecimal initialPrice,
+            @RequestParam BigDecimal finalPrice) {
+        List<BookSummaryProjection> bookPrices = bookService.findBookPriceBetween(initialPrice, finalPrice);
+        return ResponseEntity.status(HttpStatus.OK).body(bookPrices);
     }
 
     @PutMapping("/update-by/id/{id}")
