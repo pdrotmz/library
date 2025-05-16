@@ -7,6 +7,8 @@ import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 public interface BookRepository extends JpaRepository<Book, UUID> {
@@ -16,4 +18,12 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
 
     @Query(value = "SELECT b.title, b.price, b.quantity FROM tb_books b WHERE b.title LIKE = ?1", nativeQuery = true)
     BookTitleOnly findBookByTitle(@Param("title") String title);
+
+    @Query(value = "SELECT b.title, b.price, b.quantity FROM tb_books b", nativeQuery = true)
+    List<BookSummaryProjection> findAllSummaries();
+
+    @Query(value = "SELECT * FROM tb_books b WHERE b.price BETWEEN :initialPrice AND :finalPrice", nativeQuery = true)
+    List<BookSummaryProjection> findBookByPriceBetween(@Param("initialPrice") BigDecimal initialPrice,
+                                                       @Param("finalPrice") BigDecimal finalPrice);
+
 }
