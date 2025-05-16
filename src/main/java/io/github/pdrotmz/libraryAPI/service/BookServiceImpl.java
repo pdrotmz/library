@@ -26,6 +26,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public List<Book> findAllBooks() {
+        return bookRepository.findAll();
+    }
+
+    @Override
     public List<BookSummaryProjection> findAllSummaries() {
         return bookRepository.findAllSummaries();
     }
@@ -56,6 +61,22 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public List<BookSummaryProjection> findBooksByCategory(String category) {
+        if(category.isEmpty() || category == null) {
+            throw new RuntimeException("Erro ao carregar livros por categoria!");
+        }
+        return bookRepository.findBooksByCategory(category);
+    }
+
+    @Override
+    public Optional<BookTitleOnly> findBookByIsbn(String isbn) {
+        if(bookRepository.findBookByIsbn(isbn).isEmpty() || bookRepository.findBookByIsbn(isbn) == null) {
+            throw new RuntimeException("Erro ao procurar por isbn");
+        }
+        return bookRepository.findBookByIsbn(isbn);
+    }
+
+    @Override
     public void updateBookById(Book book, UUID id) {
         Book updatedBook = bookRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Livro não encontrado!"));
@@ -65,8 +86,9 @@ public class BookServiceImpl implements BookService {
         updatedBook.setPrice(book.getPrice());
         updatedBook.setQuantity(book.getQuantity());
         updatedBook.setIsbn(book.getIsbn());
+        updatedBook.setCategory(book.getCategory());
 
-        bookRepository.save(book);
+        bookRepository.save(updatedBook);
     }
 
     @Override
