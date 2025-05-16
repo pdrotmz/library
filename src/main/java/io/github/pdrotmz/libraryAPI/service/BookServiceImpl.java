@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,6 +26,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public List<BookSummaryProjection> findAllSummaries() {
+        return bookRepository.findAllSummaries();
+    }
+
+    @Override
     public BookSummaryProjection findBookById(UUID id) {
         return Optional.ofNullable(bookRepository.findBookById(id))
                 .orElseThrow(() -> new EntityNotFoundException("Erro ao achar esse livro!"));
@@ -33,6 +40,19 @@ public class BookServiceImpl implements BookService {
     public BookTitleOnly findBookByTitle(String title) {
         return Optional.ofNullable(bookRepository.findBookByTitle(title))
                 .orElseThrow(() -> new RuntimeException("Erro ao achar o livro!"));
+    }
+
+    @Override
+    public List<BookSummaryProjection> findBookPriceBetween(BigDecimal initialPrice, BigDecimal finalPrice) {
+
+        if (initialPrice == null || finalPrice == null) {
+            throw new IllegalArgumentException("Preços inicial e final não podem ser nulos");
+        }
+        if (initialPrice.compareTo(finalPrice) > 0) {
+            throw new IllegalArgumentException("Preço inicial não pode ser maior que o final");
+        }
+
+        return bookRepository.findBookByPriceBetween(initialPrice, finalPrice);
     }
 
     @Override
