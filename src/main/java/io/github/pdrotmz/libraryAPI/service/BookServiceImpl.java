@@ -20,6 +20,7 @@ public class BookServiceImpl implements BookService {
     @Autowired
     private BookRepository bookRepository;
 
+
     @Override
     public Book registerBook(Book book) {
         return bookRepository.save(book);
@@ -75,6 +76,26 @@ public class BookServiceImpl implements BookService {
         }
         return bookRepository.findBookByIsbn(isbn);
     }
+
+    @Override
+    public List<BookSummaryProjection> findBooksByReleaseDate(String releaseDate) {
+        if(bookRepository.findBooksByReleaseDate(releaseDate).isEmpty() ||
+            bookRepository.findBooksByReleaseDate(releaseDate) == null) {
+
+            throw new IllegalArgumentException("Erro ao achar o livro!");
+        }
+        return bookRepository.findBooksByReleaseDate(releaseDate);
+    }
+
+    /* @Override
+    public List<BookSummaryProjection> findBooksByAuthor(UUID authorId) {
+        if(bookRepository.findBooksByAuthor(authorId).isEmpty() ||
+            bookRepository.findBooksByAuthor(authorId) == null) {
+            throw new IllegalArgumentException("Erro ao achar o livro!");
+        }
+
+        return bookRepository.findBooksByAuthor(authorId);
+    } */
 
     @Override
     public void updateBookById(Book book, UUID id) {
