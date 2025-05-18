@@ -3,7 +3,6 @@ package io.github.pdrotmz.libraryAPI.service;
 import io.github.pdrotmz.libraryAPI.model.Book;
 import io.github.pdrotmz.libraryAPI.projection.BookSummaryProjection;
 import io.github.pdrotmz.libraryAPI.projection.BookTitleOnly;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +17,8 @@ public interface BookService {
     List<BookSummaryProjection> findBookPriceBetween(BigDecimal initialPrice, BigDecimal finalPrice);
     List<BookSummaryProjection> findBooksByCategory(String category);
     Optional<BookTitleOnly> findBookByIsbn(String isbn);
+    List<BookSummaryProjection> findBooksByReleaseDate(String releaseDate);
+    // List<BookSummaryProjection> findBooksByAuthor(UUID authorId);
     void updateBookById(Book book, UUID id);
     void deleteBookById(UUID id);
 }
