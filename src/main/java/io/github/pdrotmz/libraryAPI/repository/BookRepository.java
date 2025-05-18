@@ -7,12 +7,14 @@ import io.github.pdrotmz.libraryAPI.projection.BookTitleOnly;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Repository
 public interface BookRepository extends JpaRepository<Book, UUID> {
 
     @Query(value = "SELECT b.title, b.price, b.quantity FROM tb_books b WHERE b.id = ?1", nativeQuery = true)
@@ -33,6 +35,12 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
 
     @Query(value = "SELECT * FROM tb_books b WHERE b.isbn =:isbn", nativeQuery = true)
     Optional<BookTitleOnly> findBookByIsbn(@Param("isbn") String isbn);
+
+    @Query(value = "SELECT * FROM tb_books b WHERE b.release_date =:releaseDate", nativeQuery = true)
+    List<BookSummaryProjection> findBooksByReleaseDate(@Param("releaseDate") String releaseDate);
+
+    /* @Query(value = "SELECT * FROM tb_books b WHERE b.author_id =:authorId", nativeQuery = true)
+    List<BookSummaryProjection> findBooksByAuthor(@Param("author_id") UUID authorId); */
 
     boolean existsByIsbn(String isbn);
 }
