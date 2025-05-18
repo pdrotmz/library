@@ -72,6 +72,18 @@ public class BookController {
         return isbnBook.map(ResponseEntity::ok).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
+    @GetMapping("filter-by/release-date/{releaseDate}")
+    public ResponseEntity<List<BookSummaryProjection>> findBooksByReleaseDate(@PathVariable String releaseDate) {
+        List<BookSummaryProjection> books = bookService.findBooksByReleaseDate(releaseDate);
+        return ResponseEntity.status(HttpStatus.OK).body(books);
+    }
+
+    /* @GetMapping("filter-by/author/{authorId}")
+    public ResponseEntity<List<BookSummaryProjection>> findBooksByAuthor(@PathVariable UUID authorId) {
+        List<BookSummaryProjection> books = bookService.findBooksByAuthor(authorId);
+        return ResponseEntity.status(HttpStatus.OK).body(books);
+    } */
+
     @PutMapping("/update-by/id/{id}")
     public ResponseEntity<Void> updateBookById(@RequestBody Book book, @PathVariable UUID id) {
         bookService.updateBookById(book, id);
