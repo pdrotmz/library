@@ -34,5 +34,8 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
     @Query(value = "SELECT * FROM tb_books b WHERE b.isbn =:isbn", nativeQuery = true)
     Optional<BookTitleOnly> findBookByIsbn(@Param("isbn") String isbn);
 
+    @Query(value = "SELECT * FROM tb_books b WHERE b.release_date = ?1", nativeQuery = true)
+    List<BookSummaryProjection> findBooksByReleaseDate(@Param("release_date") String releaseDate);
+
     boolean existsByIsbn(String isbn);
 }
