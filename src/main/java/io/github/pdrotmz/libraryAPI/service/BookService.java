@@ -16,11 +16,12 @@ public interface BookService {
     List<Book> findAllBooks();
     List<BookSummaryProjection> findAllSummaries();
     BookSummaryProjection findBookById(UUID id);
-    BookTitleOnly findBookByTitle(String title);
+    List<BookTitleOnly> findBookByTitle(String title);
     List<BookSummaryProjection> findBookPriceBetween(BigDecimal initialPrice, BigDecimal finalPrice);
     List<BookSummaryProjection> findBooksByCategory(String category);
     Optional<BookTitleOnly> findBookByIsbn(String isbn);
     List<BookSummaryProjection> findBooksByReleaseDate(String releaseDate);
+    List<BookSummaryProjection> findBooksByAuthorId(UUID authorId);
     void updateBookById(Book book, UUID id);
     void deleteBookById(UUID id);
 }
