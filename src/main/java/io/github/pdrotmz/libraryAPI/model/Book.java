@@ -1,5 +1,6 @@
 package io.github.pdrotmz.libraryAPI.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -33,4 +34,12 @@ public class Book {
     @Column(name = "category", nullable = false, length = 50, updatable = true)
     @Enumerated(EnumType.STRING)
     private Category category;
+
+    @Column(name = "release_date", length = 5)
+    private String releaseDate;
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id", nullable = false)
+    @JsonManagedReference
+    private Author author;
 }
