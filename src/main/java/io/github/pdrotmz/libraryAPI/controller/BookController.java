@@ -2,6 +2,7 @@ package io.github.pdrotmz.libraryAPI.controller;
 
 import io.github.pdrotmz.libraryAPI.dto.book.BookRequestDTO;
 import io.github.pdrotmz.libraryAPI.dto.book.BookResponseDTO;
+import io.github.pdrotmz.libraryAPI.model.Author;
 import io.github.pdrotmz.libraryAPI.model.Book;
 import io.github.pdrotmz.libraryAPI.projection.BookSummaryProjection;
 import io.github.pdrotmz.libraryAPI.projection.BookTitleOnly;
@@ -50,9 +51,9 @@ public class BookController {
     }
 
     @GetMapping("/search-by/title/{title}")
-    public ResponseEntity<BookTitleOnly> findBookByTitle(@PathVariable String title) {
-        BookTitleOnly bookTitle = bookService.findBookByTitle(title);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(bookTitle);
+    public ResponseEntity<List<BookTitleOnly>> findBookByTitle(@PathVariable String title) {
+        List<BookTitleOnly> books = bookService.findBookByTitle(title);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(books);
     }
 
     @GetMapping("filter-by/category/{category}")
@@ -78,6 +79,12 @@ public class BookController {
     @GetMapping("filter-by/release-date/{releaseDate}")
     public ResponseEntity<List<BookSummaryProjection>> findBooksByReleaseDate(@PathVariable String releaseDate) {
         List<BookSummaryProjection> books = bookService.findBooksByReleaseDate(releaseDate);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(books);
+    }
+
+    @GetMapping("filter-by/author/{authorId}")
+    public ResponseEntity<List<BookSummaryProjection>> findBooksByAuthorId(@PathVariable UUID authorId) {
+        List<BookSummaryProjection> books = bookService.findBooksByAuthorId(authorId);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(books);
     }
 
