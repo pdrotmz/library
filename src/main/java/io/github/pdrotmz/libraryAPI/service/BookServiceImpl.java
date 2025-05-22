@@ -9,6 +9,7 @@ import io.github.pdrotmz.libraryAPI.projection.BookSummaryProjection;
 import io.github.pdrotmz.libraryAPI.projection.BookTitleOnly;
 import io.github.pdrotmz.libraryAPI.repository.AuthorRepository;
 import io.github.pdrotmz.libraryAPI.repository.BookRepository;
+import io.github.pdrotmz.libraryAPI.utils.Validations;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,8 +35,10 @@ public class BookServiceImpl implements BookService {
         Author authorId = authorRepository.findById(request.authorId())
                 .orElseThrow(() -> new IllegalArgumentException("ID inválido ou inexistente"));
 
-        Book book = new Book();
+        Validations.validatePrice(request.price());
+        Validations.validateQuantity(request.quantity());
 
+        Book book = new Book();
         book.setTitle(request.title());
         book.setDescription(request.description());
         book.setPrice(request.price());
@@ -73,9 +76,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookTitleOnly findBookByTitle(String title) {
-        return Optional.ofNullable(bookRepository.findBookByTitle(title))
-                .orElseThrow(() -> new RuntimeException("Erro ao achar o livro!"));
+    public List<BookTitleOnly> findBookByTitle(String title) {
+        if(bookRepository.findByTitleContaining(title).isEmpty()) {
+            throw new IllegalArgumentException("Erro ao achar o livro");
+        }
+        return bookRepository.findByTitleContaining(title);
     }
 
     @Override
@@ -113,6 +118,14 @@ public class BookServiceImpl implements BookService {
             throw new IllegalArgumentException("Erro ao achar o livro pela data de lançamento!");
         }
         return bookRepository.findBooksByReleaseDate(releaseDate);
+    }
+
+    @Override
+    public List<BookSummaryProjection> findBooksByAuthorId(UUID authorId) {
+        if(authorRepository.findById(authorId).isEmpty()) {
+            throw new IllegalArgumentException("Erro ao achar o author!");
+        }
+        return bookRepository.findBooksByAuthorId(authorId);
     }
 
     @Override
