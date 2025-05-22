@@ -1,9 +1,12 @@
 package io.github.pdrotmz.libraryAPI.controller;
 
+import io.github.pdrotmz.libraryAPI.dto.book.BookRequestDTO;
+import io.github.pdrotmz.libraryAPI.dto.book.BookResponseDTO;
 import io.github.pdrotmz.libraryAPI.model.Book;
 import io.github.pdrotmz.libraryAPI.projection.BookSummaryProjection;
 import io.github.pdrotmz.libraryAPI.projection.BookTitleOnly;
 import io.github.pdrotmz.libraryAPI.service.BookServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +26,9 @@ public class BookController {
     private BookServiceImpl bookService;
 
     @PostMapping("/register")
-    public ResponseEntity<Book> registerBook(@RequestBody Book book) {
-        Book newBook = bookService.registerBook(book);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newBook);
+    public ResponseEntity<BookResponseDTO> registerBook(@RequestBody @Valid BookRequestDTO request) {
+        BookResponseDTO response = bookService.registerBook(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/list-all")
@@ -70,6 +73,12 @@ public class BookController {
     public ResponseEntity<BookTitleOnly> findBookByIsbn(@PathVariable String isbn) {
         Optional<BookTitleOnly> isbnBook = bookService.findBookByIsbn(isbn);
         return isbnBook.map(ResponseEntity::ok).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("filter-by/release-date/{releaseDate}")
+    public ResponseEntity<List<BookSummaryProjection>> findBooksByReleaseDate(@PathVariable String releaseDate) {
+        List<BookSummaryProjection> books = bookService.findBooksByReleaseDate(releaseDate);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(books);
     }
 
     @PutMapping("/update-by/id/{id}")
