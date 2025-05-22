@@ -2,6 +2,7 @@ package io.github.pdrotmz.libraryAPI.service;
 
 import io.github.pdrotmz.libraryAPI.dto.book.BookRequestDTO;
 import io.github.pdrotmz.libraryAPI.dto.book.BookResponseDTO;
+import io.github.pdrotmz.libraryAPI.exception.book.*;
 import io.github.pdrotmz.libraryAPI.model.Author;
 import io.github.pdrotmz.libraryAPI.model.Book;
 import io.github.pdrotmz.libraryAPI.model.Category;
@@ -10,7 +11,6 @@ import io.github.pdrotmz.libraryAPI.projection.BookTitleOnly;
 import io.github.pdrotmz.libraryAPI.repository.AuthorRepository;
 import io.github.pdrotmz.libraryAPI.repository.BookRepository;
 import io.github.pdrotmz.libraryAPI.utils.Validations;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +33,7 @@ public class BookServiceImpl implements BookService {
     public BookResponseDTO registerBook(BookRequestDTO request) {
 
         Author authorId = authorRepository.findById(request.authorId())
-                .orElseThrow(() -> new IllegalArgumentException("ID inválido ou inexistente"));
+                .orElseThrow(() -> new BookNotFoundByAuthorIdException(request.authorId()));
 
         Validations.validatePrice(request.price());
         Validations.validateQuantity(request.quantity());
@@ -72,13 +72,13 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookSummaryProjection findBookById(UUID id) {
         return Optional.ofNullable(bookRepository.findBookById(id))
-                .orElseThrow(() -> new EntityNotFoundException("Erro ao achar esse livro!"));
+                .orElseThrow(() -> new BookNotFoundByIdException(id));
     }
 
     @Override
     public List<BookTitleOnly> findBookByTitle(String title) {
         if(bookRepository.findByTitleContaining(title).isEmpty()) {
-            throw new IllegalArgumentException("Erro ao achar o livro");
+            throw new BookNotFoundByTitleException(title);
         }
         return bookRepository.findByTitleContaining(title);
     }
@@ -87,10 +87,10 @@ public class BookServiceImpl implements BookService {
     public List<BookSummaryProjection> findBookPriceBetween(BigDecimal initialPrice, BigDecimal finalPrice) {
 
         if (initialPrice == null || finalPrice == null) {
-            throw new IllegalArgumentException("Preços inicial e final não podem ser nulos");
+            throw new InvalidInitialAndFinalPriceException("Preços inicial e final não podem ser nulos");
         }
         if (initialPrice.compareTo(finalPrice) > 0) {
-            throw new IllegalArgumentException("Preço inicial não pode ser maior que o final");
+            throw new InvalidInitialPriceException("Preço inicial não pode ser maior que o final");
         }
 
         return bookRepository.findBookByPriceBetween(initialPrice, finalPrice);
@@ -99,7 +99,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<BookSummaryProjection> findBooksByCategory(String category) {
         if(category.isEmpty() || category == null) {
-            throw new RuntimeException("Erro ao carregar livros por categoria!");
+            throw new BookNotFoundByCategoryException(category);
         }
         return bookRepository.findBooksByCategory(category);
     }
@@ -107,7 +107,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public Optional<BookTitleOnly> findBookByIsbn(String isbn) {
         if(bookRepository.findBookByIsbn(isbn).isEmpty() || bookRepository.findBookByIsbn(isbn) == null) {
-            throw new RuntimeException("Erro ao procurar por isbn");
+            throw new BookNotFoundByIsbnException(isbn);
         }
         return bookRepository.findBookByIsbn(isbn);
     }
@@ -115,7 +115,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<BookSummaryProjection> findBooksByReleaseDate(String releaseDate) {
         if(releaseDate.isEmpty()) {
-            throw new IllegalArgumentException("Erro ao achar o livro pela data de lançamento!");
+            throw new BookNotFoundByReleaseDateException(releaseDate);
         }
         return bookRepository.findBooksByReleaseDate(releaseDate);
     }
@@ -123,7 +123,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<BookSummaryProjection> findBooksByAuthorId(UUID authorId) {
         if(authorRepository.findById(authorId).isEmpty()) {
-            throw new IllegalArgumentException("Erro ao achar o author!");
+            throw new BookNotFoundByAuthorIdException(authorId);
         }
         return bookRepository.findBooksByAuthorId(authorId);
     }
@@ -131,7 +131,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public void updateBookById(Book book, UUID id) {
         Book updatedBook = bookRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Livro não encontrado!"));
+                .orElseThrow(() -> new BookNotFoundByIdException(id));
 
         updatedBook.setTitle(book.getTitle());
         updatedBook.setDescription(book.getDescription());
