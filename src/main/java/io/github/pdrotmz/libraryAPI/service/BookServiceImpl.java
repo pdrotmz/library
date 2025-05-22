@@ -1,8 +1,13 @@
 package io.github.pdrotmz.libraryAPI.service;
 
+import io.github.pdrotmz.libraryAPI.dto.book.BookRequestDTO;
+import io.github.pdrotmz.libraryAPI.dto.book.BookResponseDTO;
+import io.github.pdrotmz.libraryAPI.model.Author;
 import io.github.pdrotmz.libraryAPI.model.Book;
+import io.github.pdrotmz.libraryAPI.model.Category;
 import io.github.pdrotmz.libraryAPI.projection.BookSummaryProjection;
 import io.github.pdrotmz.libraryAPI.projection.BookTitleOnly;
+import io.github.pdrotmz.libraryAPI.repository.AuthorRepository;
 import io.github.pdrotmz.libraryAPI.repository.BookRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +25,35 @@ public class BookServiceImpl implements BookService {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private AuthorRepository authorRepository;
+
     @Override
-    public Book registerBook(Book book) {
-        return bookRepository.save(book);
+    public BookResponseDTO registerBook(BookRequestDTO request) {
+
+        Author authorId = authorRepository.findById(request.authorId())
+                .orElseThrow(() -> new IllegalArgumentException("ID inválido ou inexistente"));
+
+        Book book = new Book();
+
+        book.setTitle(request.title());
+        book.setDescription(request.description());
+        book.setPrice(request.price());
+        book.setQuantity(request.quantity());
+        book.setIsbn(request.isbn());
+        book.setCategory(Category.valueOf(request.category()));
+        book.setReleaseDate(request.releaseDate());
+        book.setAuthor(authorId);
+
+        bookRepository.save(book);
+
+        return new BookResponseDTO(
+                book.getTitle(),
+                book.getPrice(),
+                book.getQuantity(),
+                book.getCategory().getCategory(),
+                book.getReleaseDate(),
+                book.getAuthor().getName());
     }
 
     @Override
@@ -74,6 +105,14 @@ public class BookServiceImpl implements BookService {
             throw new RuntimeException("Erro ao procurar por isbn");
         }
         return bookRepository.findBookByIsbn(isbn);
+    }
+
+    @Override
+    public List<BookSummaryProjection> findBooksByReleaseDate(String releaseDate) {
+        if(releaseDate.isEmpty()) {
+            throw new IllegalArgumentException("Erro ao achar o livro pela data de lançamento!");
+        }
+        return bookRepository.findBooksByReleaseDate(releaseDate);
     }
 
     @Override
