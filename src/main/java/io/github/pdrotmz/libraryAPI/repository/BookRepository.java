@@ -18,8 +18,8 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
     @Query(value = "SELECT b.title, b.price, b.quantity FROM tb_books b WHERE b.id = ?1", nativeQuery = true)
     BookSummaryProjection findBookById(UUID id);
 
-    @Query(value = "SELECT b.title, b.price, b.quantity FROM tb_books b WHERE b.title LIKE = ?1", nativeQuery = true)
-    BookTitleOnly findBookByTitle(@Param("title") String title);
+    @Query(value = "SELECT b.title as title, b.price as price, b.quantity as quantity FROM tb_books b WHERE b.title LIKE %?1%", nativeQuery = true)
+    List<BookTitleOnly> findByTitleContaining(String title);
 
     @Query(value = "SELECT b.title, b.price, b.quantity FROM tb_books b", nativeQuery = true)
     List<BookSummaryProjection> findAllSummaries();
@@ -36,6 +36,8 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
 
     @Query(value = "SELECT * FROM tb_books b WHERE b.release_date = ?1", nativeQuery = true)
     List<BookSummaryProjection> findBooksByReleaseDate(@Param("release_date") String releaseDate);
+
+    List<BookSummaryProjection> findBooksByAuthorId(UUID authorId);
 
     boolean existsByIsbn(String isbn);
 }
