@@ -30,7 +30,14 @@ public class Book {
     @Column(name = "isbn", nullable = false, length = 20, unique = true)
     private String isbn;
 
+    @Column(name = "release_date", length = 5)
+    private String releaseDate;
+
     @Column(name = "category", nullable = false, length = 50, updatable = true)
     @Enumerated(EnumType.STRING)
     private Category category;
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id", nullable = false)
+    private Author author;
 }
