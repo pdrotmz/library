@@ -4,7 +4,3 @@ spring:
 
   profiles:
     active: test
-
-  flyway:
-    baseline-on-migrate: true
-    enabled: true
