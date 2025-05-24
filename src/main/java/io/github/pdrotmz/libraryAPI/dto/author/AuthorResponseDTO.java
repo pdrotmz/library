@@ -8,6 +8,7 @@ import java.util.UUID;
 public record AuthorResponseDTO(
         UUID id,
         String name,
+        int birthDate,
         List<Book> books
 ) {
 }
