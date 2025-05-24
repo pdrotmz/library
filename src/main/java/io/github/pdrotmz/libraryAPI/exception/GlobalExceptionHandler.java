@@ -1,5 +1,6 @@
 package io.github.pdrotmz.libraryAPI.exception;
 
+import io.github.pdrotmz.libraryAPI.exception.author.AuthorNotFoundByBirthDateException;
 import io.github.pdrotmz.libraryAPI.exception.book.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -121,5 +122,16 @@ public class GlobalExceptionHandler {
         body.put("message", exception.getMessage());
 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AuthorNotFoundByBirthDateException.class)
+    public ResponseEntity<Object> handleAuthorNotFoundByBirthDateException(AuthorNotFoundByBirthDateException exception) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.NOT_FOUND.value());
+        body.put("error", "Not Found");
+        body.put("message", exception.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 }
