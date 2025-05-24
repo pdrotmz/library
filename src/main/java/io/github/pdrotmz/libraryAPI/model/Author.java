@@ -20,6 +20,9 @@ public class Author {
     @Column(name = "name", length = 100, updatable = true)
     private String name;
 
+    @Column(name = "birth_date", length = 4)
+    private int birthDate;
+
     @JsonBackReference
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Book> books = new ArrayList<>();
