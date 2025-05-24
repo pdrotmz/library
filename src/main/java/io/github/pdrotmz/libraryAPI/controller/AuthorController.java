@@ -24,6 +24,12 @@ public class AuthorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @GetMapping("/filter-by/birth-date/{birthDate}")
+    public ResponseEntity<List<Author>> findAuthorByBirthDate(@PathVariable int birthDate) {
+        List<Author> authors = service.findAuthorsByBirthDate(birthDate);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(authors);
+    }
+
     @GetMapping("/find-all")
     public ResponseEntity<List<Author>> findAllAuthors() {
         List<Author> authors = service.findAllAuthors();
