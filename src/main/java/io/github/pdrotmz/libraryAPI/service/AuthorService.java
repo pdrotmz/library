@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface AuthorService {
     AuthorResponseDTO registerAuthor(AuthorRequestDTO request);
+    List<Author> findAuthorsByBirthDate(int birthDate);
     List<Author> findAllAuthors();
 }
