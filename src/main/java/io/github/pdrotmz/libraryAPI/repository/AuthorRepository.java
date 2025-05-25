@@ -11,8 +11,8 @@ import java.util.UUID;
 
 public interface AuthorRepository extends JpaRepository<Author, UUID> {
 
-    @Query(value = "SELECT * FROM tb_authors a WHERE a.name =: name", nativeQuery = true)
-    AuthorResponseDTO findAuthorByName(@Param("name") String name);
+    @Query(value = "SELECT * FROM tb_authors a WHERE a.name LIKE %?1%", nativeQuery = true)
+    List<Author> findAuthorByName(String name);
 
     @Query(value = "SELECT * FROM tb_authors a WHERE a.birth_date = :birthDate", nativeQuery = true)
     List<Author> findAuthorsByBirthDate(@Param("birthDate") int birthDate);
