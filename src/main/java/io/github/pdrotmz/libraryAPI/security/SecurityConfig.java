@@ -38,8 +38,29 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+
+                        // Auth Requests
                         .requestMatchers("/api/auth/**").permitAll()
+
+                        // Author Requests
                         .requestMatchers(HttpMethod.POST, "/author/register").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/author/filter-by/").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/author/filter-by/name/").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/author/find-all").hasAnyRole("ADMIN", "USER")
+
+                        // Book Requests
+                        .requestMatchers(HttpMethod.POST, "/book/register").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/book/list-all").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/book/search-by/id/").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/book/search-by/title/").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/book/search-by/isbn/").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/book/filter-by/release-date/").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/book/filter-by/category/").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/book/filter-by/author/").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/book/filter-by/price-between").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.PUT, "/book/update-by/id/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/book/delete-by/id/").hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())
