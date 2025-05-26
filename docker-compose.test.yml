@@ -11,6 +11,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${H2_PASSWORD}
       - SPRING_DATASOURCE_DRIVER_CLASS_NAME=${H2_DRIVER}
       - SPRING_PROFILES_ACTIVE=test
+      - SECRET=${SECRET}
     depends_on:
       - h2
       - redis

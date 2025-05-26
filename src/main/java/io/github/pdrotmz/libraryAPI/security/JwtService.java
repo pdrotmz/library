@@ -15,9 +15,10 @@ import java.util.Date;
 @Service
 public class JwtService {
 
+    private final SecurityProperties securityProperties;
+
     public SecretKey getSignInKey() {
-        String testKey = "Z0FbRtRi7axqQY9GqzHzlgJHhTnX8QZgL0UurO4Qdz0=";
-        byte[] keyBytes = Decoders.BASE64.decode(testKey);
+        byte[] keyBytes = Decoders.BASE64.decode(securityProperties.getKey());
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
