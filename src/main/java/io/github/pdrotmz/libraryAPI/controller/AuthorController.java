@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("author")
@@ -40,5 +41,17 @@ public class AuthorController {
     public ResponseEntity<List<Author>> findAuthorByName(@PathVariable String name) {
         List<Author> authors = service.findAuthorByName(name);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(authors);
+    }
+
+    @PutMapping("/update-by/id/{id}")
+    public ResponseEntity<Void> updatedAuthorById(@RequestBody Author author, @PathVariable UUID id) {
+        service.updateAuthorById(author, id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @DeleteMapping("/delete-by/id/{id}")
+    public ResponseEntity<Void> deleteAuthorById(@PathVariable UUID id) {
+        service.deleteAuthorById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
