@@ -2,7 +2,7 @@ package io.github.pdrotmz.libraryAPI.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,11 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "tb_authors")
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Builder
 public class Author {
 
     @Id
