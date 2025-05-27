@@ -1,7 +1,6 @@
-package io.github.pdrotmz.libraryAPI.security;
+package io.github.pdrotmz.libraryAPI.security.auth;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -41,6 +40,9 @@ public class SecurityConfig {
 
                         // Auth Requests
                         .requestMatchers("/api/auth/**").permitAll()
+
+                        // Swagger Requests
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
                         // Author Requests
                         .requestMatchers(HttpMethod.POST, "/author/register").hasRole("ADMIN")

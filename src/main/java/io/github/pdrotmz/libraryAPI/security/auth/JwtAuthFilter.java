@@ -1,4 +1,4 @@
-package io.github.pdrotmz.libraryAPI.security;
+package io.github.pdrotmz.libraryAPI.security.auth;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

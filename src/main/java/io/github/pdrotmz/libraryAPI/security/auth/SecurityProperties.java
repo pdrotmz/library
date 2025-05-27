@@ -1,4 +1,4 @@
-package io.github.pdrotmz.libraryAPI.security;
+package io.github.pdrotmz.libraryAPI.security.auth;
 
 
 import lombok.Getter;

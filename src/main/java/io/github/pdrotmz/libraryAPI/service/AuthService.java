@@ -5,7 +5,7 @@ import io.github.pdrotmz.libraryAPI.dto.auth.AuthResponse;
 import io.github.pdrotmz.libraryAPI.dto.auth.RegisterRequest;
 import io.github.pdrotmz.libraryAPI.model.User;
 import io.github.pdrotmz.libraryAPI.repository.UserRepository;
-import io.github.pdrotmz.libraryAPI.security.JwtService;
+import io.github.pdrotmz.libraryAPI.security.auth.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

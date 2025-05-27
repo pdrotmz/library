@@ -1,6 +1,5 @@
-package io.github.pdrotmz.libraryAPI.security;
+package io.github.pdrotmz.libraryAPI.security.auth;
 
-import io.github.pdrotmz.libraryAPI.model.User;
 import io.github.pdrotmz.libraryAPI.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
