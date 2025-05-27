@@ -10,6 +10,7 @@ import io.github.pdrotmz.libraryAPI.repository.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,29 +22,33 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public AuthorResponseDTO registerAuthor(AuthorRequestDTO request) {
-        Author author = new Author();
-        author.setName(request.name());
-        author.setBirthDate(request.birthDate());
+        Author author = Author.builder()
+                .name(request.name())
+                .birthDate(request.birthDate())
+                .books(new ArrayList<>())
+                .build();
 
-        repository.save(author);
+        Author savedAuthor = repository.save(author);
 
-        return new AuthorResponseDTO(author.getId(), author.getName(), author.getBirthDate(), author.getBooks());
+        return new AuthorResponseDTO(savedAuthor.getId(), savedAuthor.getName(), savedAuthor.getBirthDate(), savedAuthor.getBooks());
     }
 
     @Override
     public List<Author> findAuthorByName(String name) {
-        if(repository.findAuthorByName(name).isEmpty()) {
+        List<Author> authors = repository.findAuthorByName(name);
+        if(authors.isEmpty()) {
             throw new AuthorNotFoundByNameException(name);
         }
-        return repository.findAuthorByName(name);
+        return authors;
     }
 
     @Override
     public List<Author> findAuthorsByBirthDate(int birthDate) {
-        if(repository.findAuthorsByBirthDate(birthDate).isEmpty()) {
+        List<Author> authors = repository.findAuthorsByBirthDate(birthDate);
+        if(authors.isEmpty()) {
             throw new AuthorNotFoundByBirthDateException(birthDate);
         }
-        return repository.findAuthorsByBirthDate(birthDate);
+        return authors;
     }
 
     @Override
