@@ -2,6 +2,8 @@ package io.github.pdrotmz.libraryAPI.model;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+
 @Getter
 public enum Category {
     MANGA("mangá"),
@@ -16,6 +18,13 @@ public enum Category {
 
     Category(String category) {
         this.category = category;
+    }
+
+    public static Category fromLabel(String label) {
+        return Arrays.stream(Category.values())
+                .filter(c -> c.getCategory().equalsIgnoreCase(label))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Categoria inválida: " + label));
     }
 
 }
