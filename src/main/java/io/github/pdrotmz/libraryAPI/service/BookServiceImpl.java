@@ -44,7 +44,7 @@ public class BookServiceImpl implements BookService {
         book.setPrice(request.price());
         book.setQuantity(request.quantity());
         book.setIsbn(request.isbn());
-        book.setCategory(Category.valueOf(request.category()));
+        book.setCategory(Category.fromLabel(request.category()));
         book.setReleaseDate(request.releaseDate());
         book.setAuthor(authorId);
 
