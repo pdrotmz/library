@@ -21,5 +21,23 @@ springdoc:
   swagger-ui:
     enabled: true
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, prometheus, httptrace, loggers, threaddump
+  endpoint:
+    health:
+      show-details: always
+    info:
+      app:
+        name: Library API
+        description: API para gerenciamento de livros e autores
+        version: 1.0.0
+  metrics:
+    enable:
+      all: true
+
+
 server:
   port: 8083
