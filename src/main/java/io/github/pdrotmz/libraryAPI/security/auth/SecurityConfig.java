@@ -65,6 +65,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/book/update-by/id/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/book/delete-by/id/").hasRole("ADMIN")
 
+                        // Metrics Requests
+                        .requestMatchers("/actuator/**").hasRole("ADMIN")
 
                         .anyRequest().authenticated()
                 )
